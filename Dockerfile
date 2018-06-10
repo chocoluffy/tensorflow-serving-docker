@@ -50,8 +50,9 @@ RUN cd / && git clone --recurse-submodules https://github.com/krystianity/servin
 #RUN cd serving/tensorflow && ./configure
 #CMD ["/bin/bash"]
 
-RUN cd serving/tensorflow && ./tensorflow/tools/ci_build/builds/configured cpu
-RUN cd serving && bazel build --local_resources 4096,4.0,1.0 -j 1 //tensorflow_serving/model_servers:tensorflow_model_server
+# RUN cd serving/tensorflow && ./tensorflow/tools/ci_build/builds/configured cpu
+RUN cd serving/tensorflow && ./configure
+RUN cd .. && bazel build --local_resources 4096,4.0,1.0 -j 1 //tensorflow_serving/model_servers:tensorflow_model_server
 
 WORKDIR /serving/bazel-bin/tensorflow_serving/model_servers
 CMD ["./tensorflow_model_server"]
