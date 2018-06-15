@@ -33,8 +33,10 @@ RUN pip install mock grpcio
 # Set up Bazel.
 
 ENV BAZELRC /root/.bazelrc
-# Install the most recent bazel release.
-ENV BAZEL_VERSION 0.10.0
+# Install the most recent bazel release. Notice this issue,
+# https://github.com/bazelbuild/bazel/issues/4828, Bazel 0.10.0 has errors with
+# tensorflow 1.5
+ENV BAZEL_VERSION 0.5.2
 WORKDIR /
 RUN mkdir /bazel && \
     cd /bazel && \
@@ -45,16 +47,18 @@ RUN mkdir /bazel && \
     cd / && \
     rm -f /bazel/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
 
+RUN cd / && git clone --recurse-submodules https://github.com/krystianity/serving 
+
+RUN cd /serving/tensorflow && ./tensorflow/tools/ci_build/builds/configured cpu
+
 CMD ["/bin/bash"]
-# RUN cd / && git clone --recurse-submodules https://github.com/krystianity/serving
-#RUN cd serving/tensorflow && ./configure
-#CMD ["/bin/bash"]
+# ./configure CMD ["/bin/bash"]
 
 # RUN cd serving/tensorflow && ./tensorflow/tools/ci_build/builds/configured cpu
-# RUN cd serving
-# CMD bazel test -c opt tensorflow_serving/...
+# RUN cd serving CMD bazel test -c opt tensorflow_serving/...
 
-# RUN cd .. && bazel build --local_resources 4096,4.0,1.0 -j 1 //tensorflow_serving/model_servers:tensorflow_model_server
+# RUN cd .. && bazel build --local_resources 4096,4.0,1.0 -j 1
+# //tensorflow_serving/model_servers:tensorflow_model_server
 
-# WORKDIR /serving/bazel-bin/tensorflow_serving/model_servers
-# CMD ["./tensorflow_model_server"]
+# WORKDIR /serving/bazel-bin/tensorflow_serving/model_servers CMD
+# ["./tensorflow_model_server"]
