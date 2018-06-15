@@ -45,14 +45,14 @@ RUN mkdir /bazel && \
     cd / && \
     rm -f /bazel/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
 
-# CMD ["/bin/bash"]
-RUN cd / && git clone --recurse-submodules https://github.com/krystianity/serving
+CMD ["/bin/bash"]
+# RUN cd / && git clone --recurse-submodules https://github.com/krystianity/serving
 #RUN cd serving/tensorflow && ./configure
 #CMD ["/bin/bash"]
 
 # RUN cd serving/tensorflow && ./tensorflow/tools/ci_build/builds/configured cpu
-RUN cd serving
-CMD bazel test -c opt tensorflow_serving/...
+# RUN cd serving
+# CMD bazel test -c opt tensorflow_serving/...
 
 # RUN cd .. && bazel build --local_resources 4096,4.0,1.0 -j 1 //tensorflow_serving/model_servers:tensorflow_model_server
 
